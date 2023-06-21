@@ -41,7 +41,7 @@ jobs:
       - restore_cache:
           keys: [frontend-build]
       - run: ls    
-      - run: cd ./frontend
+      - run: cd frontend
       - run: ls
       - run: npm install
       # - run:
