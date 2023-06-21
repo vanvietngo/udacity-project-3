@@ -1,0 +1,28 @@
+version: 2.1
+
+# Define the jobs we want to run for this project
+jobs:
+  build-frontend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run: echo "this is the build frontend job"
+      - run: cd frontend
+      - run: npm install
+      - run: npm run build
+  build-backend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run: echo "this is the test job"
+      - run: cd backend
+      - run: npm install
+      - run: npm run build
+# Orchestrate our job run sequence
+workflows:
+  fe_and_be:
+    jobs:
+      - build-frontend
+      - build-backend
