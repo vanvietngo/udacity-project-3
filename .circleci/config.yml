@@ -40,18 +40,20 @@ jobs:
       - checkout
       - restore_cache:
           keys: [frontend-build]
-      - run: ls    
-      - run: cd frontend/frontend
-      - run: ls
-      - run: npm install
-      # - run:
-          # name: Build front-end
-          # command: |
-          #   # Your code here
-          #   npm install
-          #   # exit 1
-      - run: ls      
-      - run: npm run build      
+      # - run: ls    
+      # - run: cd frontend/frontend
+      # - run: ls
+      # - run: npm install
+      - run:
+          name: Build front-end
+          command: |
+            # Your code here
+            cd ./frontend
+            npm install
+            npm run build
+            # exit 1
+      # - run: ls      
+      # - run: npm run build      
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
