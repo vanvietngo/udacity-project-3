@@ -8,7 +8,10 @@ jobs:
     steps:
       - checkout
       - run: echo "this is the build frontend job"
+      - run: ls
+      - run: pwd
       - run: cd frontend
+      - run: ls
       - run: npm install
       - run: npm run build
   build-backend:
