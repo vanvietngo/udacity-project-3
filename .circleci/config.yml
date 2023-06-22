@@ -89,7 +89,7 @@ jobs:
           command: |
             # Your code here
             cd ./frontend
-            # npm install
+            npm install
             npm run test
             # exit 1                
   test-backend:
@@ -102,7 +102,7 @@ jobs:
           command: |
             # Your code here
             cd ./backend
-            # npm install
+            npm install
             npm run test
             # exit 1               
 #   scan-frontend:
