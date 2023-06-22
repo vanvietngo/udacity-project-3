@@ -119,6 +119,7 @@ jobs:
           command: |
             # Your code here
             cd ./frontend
+            npm install
             npm audit --audit-level=critical
             # exit 1   
   scan-backend:
@@ -132,6 +133,7 @@ jobs:
           command: |
             # Your code here
             cd ./backend
+            npm install
             npm audit --audit-level=critical
             # exit 1   
 
