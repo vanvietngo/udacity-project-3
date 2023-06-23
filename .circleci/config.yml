@@ -247,10 +247,11 @@ jobs:
             cat .circleci/ansible/inventory.txt
 
       - run: ls
-      - run: |
-        ls -la
-        cd project
-        ls -la
+      - run: 
+          command: |
+            ls -la
+            cd project
+            ls -la
       - persist_to_workspace:
           root: ~/
           paths:
