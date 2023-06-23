@@ -278,7 +278,7 @@ jobs:
       # Checkout code from git
       - checkout
       # install dependence
-      - RUN: npm install
+      - run: npm install
 
         # cli
       - install_awscli
