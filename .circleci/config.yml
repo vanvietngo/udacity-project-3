@@ -202,7 +202,7 @@ jobs:
   deploy-infrastructure:
     docker:
       # Docker image here that supports AWS CLI
-      - image: cimg/base:stable
+      - image: amazon/aws-cli
     steps:
       # Checkout code from git
       - checkout
@@ -235,7 +235,11 @@ jobs:
             echo $BACKEND_PUBLIC_IP >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
 
-            
+      - run: 
+          command: |
+            apt-get update
+            apt-get install tar
+
       - persist_to_workspace:
           root: ~/
           paths:
