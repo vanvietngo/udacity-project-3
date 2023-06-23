@@ -278,8 +278,6 @@ jobs:
       # Checkout code from git
       - checkout
       # install dependence
-      - run: npm install
-
         # cli
       - install_awscli
         # ansible
