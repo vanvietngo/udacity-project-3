@@ -24,6 +24,16 @@ commands:
             # aws s3 rm s3://udapeople-<<parameters.Workflow_ID>> --recursive
             aws cloudformation delete-stack --stack-name frontend-stack-<< parameters.Workflow_ID >>
 
+  install_awscli:
+    description: Install AWS CLI v2
+    steps:
+      - run:
+          name: Install AWS CLI v2
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+
   # revert-migrations:
   #   description: Revert the last migration if successfully run in the current workflow.
   #   parameters:
@@ -202,8 +212,9 @@ jobs:
   deploy-infrastructure:
     docker:
       # Docker image here that supports AWS CLI
-      - image: amazon/aws-cli
+      - image: cimg/base:stable
     steps:
+      - install_awscli
       # Checkout code from git
       - checkout
       - run:
