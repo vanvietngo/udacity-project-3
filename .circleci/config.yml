@@ -227,7 +227,7 @@ jobs:
             IP_BE_EC2=$(MY_VARIABLE=$(aws ec2 describe-instances \
              --filters "Name=tag:KEY,Values=backend-stack-backend-e1569" \
              --query 'Reservations[0].Instances[0].PublicIpAddress' \
-             --output text)
+             --output text )
             echo IP_BE_EC2 >> ./circleci/ansible/inventory.txt
             cat ./circleci/ansible/inventory.txt
             # exit 1
