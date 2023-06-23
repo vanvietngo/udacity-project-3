@@ -214,9 +214,9 @@ jobs:
       # Docker image here that supports AWS CLI
       - image: cimg/base:stable
     steps:
-      - install_awscli
       # Checkout code from git
       - checkout
+      - install_awscli
       - run:
           name: Ensure back-end infrastructure exists
           command: |
