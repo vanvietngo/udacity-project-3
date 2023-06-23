@@ -1,8 +1,8 @@
 version: 2.1
 environment:
-    CIRCLE_PROJECT_REPONAME: << pipeline.trigger_parameters.gitlab.repo_name >>
-    CIRCLE_BRANCH: << CIRCLE_BRANCH >>
-    CIRCLE_WORKING_DIRECTORY: <<CIRCLE_WORKING_DIRECTORY>>
+  CIRCLE_PROJECT_REPONAME: << pipeline.trigger_parameters.gitlab.repo_name >>
+  CIRCLE_BRANCH: << CIRCLE_BRANCH >>
+  CIRCLE_WORKING_DIRECTORY: <<CIRCLE_WORKING_DIRECTORY>>
 orbs:
   node: circleci/node@4.1
   slack: circleci/slack@4.1
@@ -33,6 +33,18 @@ commands:
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             sudo ./aws/install
+            aws --version
+
+  install_ansible:
+    description: Install Ansible
+    steps:
+      - run:
+          name: Install Ansible
+          command: |
+            sudo apt update
+            sudo apt install software-properties-common
+            sudo apt-add-repository --yes --update ppa:ansible/ansible
+            sudo apt install ansible
 
   # revert-migrations:
   #   description: Revert the last migration if successfully run in the current workflow.
@@ -92,7 +104,6 @@ jobs:
           paths: [frontend/node_modules]
           key: frontend-build
 
-     
   build-backend:
     docker:
       - image: circleci/node:13.8.0
@@ -128,7 +139,7 @@ jobs:
             npm install
             npm run test
             # exit 1
-  
+
   test-backend:
     docker:
       - image: circleci/node:13.8.0
@@ -165,7 +176,6 @@ jobs:
               ]
             }
           event: always
-
 
   scan-frontend:
     docker:
@@ -253,31 +263,43 @@ jobs:
             cat .circleci/ansible/inventory.txt
 
       - run: ls
-      
+
       - persist_to_workspace:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-
       - destroy-environment
-#   configure-infrastructure:
-#     docker:
-#       # Docker image here that supports Ansible
-#     steps:
-#       # Checkout code from git
-#       # Add ssh keys with fingerprint
-#       # attach workspace
-#       - run:
-#           name: Install dependencies
-#           command: |
-#             # Your code here
-#             exit 1
-#       - run:
-#           name: Configure server
-#           command: |
-#             # Your code here
-#             exit 1
-#       # Here's where you will add some code to rollback on failure
+
+  configure-infrastructure:
+    docker:
+      # Docker image here that supports Ansible
+      - image: cimg/base:stable
+    steps:
+      # Checkout code from git
+      - checkout
+      # install dependence
+      - RUN: npm install
+
+        # cli
+      - install_awscli
+        # ansible
+      - install_ansible
+
+      # Add ssh keys with fingerprint
+      - add_ssh_keys:
+          fingerprints: ["01:e3:11:e9:57:63:fc:1c:f9:99:49:83:bb:b0:dc:54"]
+      # attach workspace
+      - attach_workspace:
+        at: ~/
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            cat inventory.txt
+            ansible-playbook -i inventory.txt configure-server.yml
+      - destroy-environment
+
+      # Here's where you will add some code to rollback on failure
 
 #   run-migrations:
 #     docker:
@@ -410,8 +432,8 @@ workflows:
           filters:
             branches:
               only: [main]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
       # - run-migrations:
       #     requires: [configure-infrastructure]
       # - deploy-frontend:
@@ -425,20 +447,15 @@ workflows:
       # - cleanup:
       #     requires: [cloudfront-update]
 
-
-
-
-               
       #  Slack configuraition
   # send-notification:
   #   jobs:
   #     - notify:
   #         context: vietContext
 
-
-      #     event: fail
-      #     mentions: '@EngineeringTeam'
-      #     template: basic_fail_1
-      # - slack/notify:
-      #     event: pass
-      #     template: success_tagged_deploy_1
+  #     event: fail
+  #     mentions: '@EngineeringTeam'
+  #     template: basic_fail_1
+  # - slack/notify:
+  #     event: pass
+  #     template: success_tagged_deploy_1
