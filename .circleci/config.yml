@@ -246,11 +246,6 @@ jobs:
             echo $BACKEND_PUBLIC_IP >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
 
-      - run: 
-          command: |
-            apt-get update
-            apt-get install tar
-
       - persist_to_workspace:
           root: ~/
           paths:
