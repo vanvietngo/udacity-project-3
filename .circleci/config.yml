@@ -203,34 +203,34 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
-      # - run:
-      #     name: Ensure back-end infrastructure exists
-      #     command: |
-      #       aws cloudformation deploy \
-      #         --template-file .circleci/files/backend.yml \
-      #         --tags project=backend \
-      #         --stack-name backend-stack-${CIRCLE_WORKFLOW_ID:0:5} \
-      #         --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:5}
-      #         # exit 1
-      # - run:
-      #     name: Ensure front-end infrastructure exist
-      #     command: |
-      #       aws cloudformation deploy \
-      #         --template-file .circleci/files/frontend.yml \
-      #         --tags project=frontend \
-      #         --stack-name frontend-stack-${CIRCLE_WORKFLOW_ID:0:5} \
-      #         --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:5}
-      #         # exit 1
-      # - run:
-      #     name: Add back-end ip to ansible inventory
-      #     command: |
-      #       IP_BE_EC2=$(MY_VARIABLE=$(aws ec2 describe-instances \
-      #       --filters "Name=tag:KEY,Values=backend-stack-backend-e1569" \
-      #       --query 'Reservations[0].Instances[0].PublicIpAddress' \
-      #       --output text)
-      #       echo $IP_BE_EC2 >> ./circleci/ansible/inventory.txt
-      #       cat ./circleci/ansible/inventory.txt
-      #       # exit 1
+      - run:
+          name: Ensure back-end infrastructure exists
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/backend.yml \
+              --tags project=backend \
+              --stack-name backend-stack-${CIRCLE_WORKFLOW_ID:0:5} \
+              --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:5}
+              # exit 1
+      - run:
+          name: Ensure front-end infrastructure exist
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/frontend.yml \
+              --tags project=frontend \
+              --stack-name frontend-stack-${CIRCLE_WORKFLOW_ID:0:5} \
+              --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:5}
+              # exit 1
+      - run:
+          name: Add back-end ip to ansible inventory
+          command: |
+            IP_BE_EC2=$(MY_VARIABLE=$(aws ec2 describe-instances \
+            --filters "Name=tag:KEY,Values=backend-stack-backend-e1569" \
+            --query 'Reservations[0].Instances[0].PublicIpAddress' \
+            --output text)
+            echo $IP_BE_EC2 >> ./circleci/ansible/inventory.txt
+            cat ./circleci/ansible/inventory.txt
+            # exit 1
 
       - run:
           name: Add back-end ip to ansible inventory
@@ -247,8 +247,8 @@ jobs:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-#       # Here's where you will add some code to rollback on failure
-      # - destroy-environment
+      # Here's where you will add some code to rollback on failure
+      - destroy-environment
 #   configure-infrastructure:
 #     docker:
 #       # Docker image here that supports Ansible
@@ -383,19 +383,19 @@ jobs:
 workflows:
   default:
     jobs:
-      # - build-frontend
-      # - build-backend
-      # - test-frontend:
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
-      # - scan-backend:
-      #     requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [build-frontend]
+      - build-frontend
+      - build-backend
+      - test-frontend:
+          requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
+      - scan-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
 
       - deploy-infrastructure:
-          # requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
             branches:
               only: [main]
