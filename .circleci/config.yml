@@ -39,6 +39,19 @@ commands:
   #           fi
 
 jobs:
+  build-slack:
+    machine: true
+    steps:
+      - run: echo "build form Slack"
+      - slack/notify:
+          branch_pattern: main
+          event: fail
+          template: basic_fail_1
+      # - slack/notify:
+      #     branch_pattern: production
+      #     event: fail
+      #     mentions: <@U8XXXXXXX>, @UserName
+      #     template: basic_fail_1
   build-frontend:
     docker:
       - image: circleci/node:13.8.0
@@ -178,38 +191,45 @@ jobs:
             npm audit --audit-level=critical
             # exit 1
 
-#   deploy-infrastructure:
-#     docker:
-#       # Docker image here that supports AWS CLI
-#     steps:
-#       # Checkout code from git
-#       - run:
-#           name: Ensure back-end infrastructure exists
-#           command: |
-#             aws cloudformation deploy \
-#               --template-file .circleci/files/backend.yml \
-#               #--tags project=your-tag \
-#               # --stack-name "your back-end stack name with workflow id" \
-#               # --parameter-overrides ID="your workflow id"
-#               exit 1
-#       - run:
-#           name: Ensure front-end infrastructure exist
-#           command: |
-#             aws cloudformation deploy \
-#               --template-file .circleci/files/frontend.yml \
-#               #--tags project=your-tag \
-#               # --stack-name "your front-end stack name with workflow id" \
-#               # --parameter-overrides ID="your workflow id"
-#               exit 1
-#       - run:
-#           name: Add back-end ip to ansible inventory
-#           command: |
-#             # Your code here
-#             exit 1
-#       - persist_to_workspace:
-#           root: ~/
-#           paths:
-#             - project/.circleci/ansible/inventory.txt
+  deploy-infrastructure:
+    docker:
+      # Docker image here that supports AWS CLI
+      - image: amazon/aws-cli
+    steps:
+      # Checkout code from git
+      - checkout
+      - run:
+          name: Ensure back-end infrastructure exists
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/backend.yml \
+              --tags project=backend \
+              --stack-name backend-stack-${CIRCLE_WORKFLOW_ID:0:5} \
+              --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:5}
+              # exit 1
+      - run:
+          name: Ensure front-end infrastructure exist
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/frontend.yml \
+              --tags project=frontend \
+              --stack-name frontend-stack-${CIRCLE_WORKFLOW_ID:0:5} \
+              --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:5}
+              # exit 1
+      - run:
+          name: Add back-end ip to ansible inventory
+          command: |
+            # Your code here
+            IP_BE_EC2=$(MY_VARIABLE=$(aws ec2 describe-instances \
+             --filters "Name=tag:KEY,Values=backend-stack-${CIRCLE_WORKFLOW_ID:0:5}" \
+             --query 'Reservations[0].Instances[0].PublicIpAddress' \
+             --output text)
+            echo IP_BE_EC2 >> ./ansible/inventory.txt
+            # exit 1
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/ansible/inventory.txt
 #       # Here's where you will add some code to rollback on failure
 
 #   configure-infrastructure:
@@ -346,35 +366,22 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend
-      - build-backend
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
-      - scan-backend:
-          requires: [build-backend]
-      - scan-frontend:
-          requires: [build-frontend]
-               
-      #  Slack configuraition
-  send-notification:
-    jobs:
-      - notify:
-          context: vietContext
+      # - build-frontend
+      # - build-backend
+      # - test-frontend:
+      #     requires: [build-frontend]
+      # - test-backend:
+      #     requires: [build-backend]
+      # - scan-backend:
+      #     requires: [build-backend]
+      # - scan-frontend:
+      #     requires: [build-frontend]
 
-
-      #     event: fail
-      #     mentions: '@EngineeringTeam'
-      #     template: basic_fail_1
-      # - slack/notify:
-      #     event: pass
-      #     template: success_tagged_deploy_1
-      # - deploy-infrastructure:
-      #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-      #     filters:
-      #       branches:
-      #         only: [test-feature-branch]
+      - deploy-infrastructure:
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          filters:
+            branches:
+              only: [main]
       # - configure-infrastructure:
       #     requires: [deploy-infrastructure]
       # - run-migrations:
@@ -389,3 +396,21 @@ workflows:
       #     requires: [smoke-test]
       # - cleanup:
       #     requires: [cloudfront-update]
+
+
+
+
+               
+      #  Slack configuraition
+  # send-notification:
+  #   jobs:
+  #     - notify:
+  #         context: vietContext
+
+
+      #     event: fail
+      #     mentions: '@EngineeringTeam'
+      #     template: basic_fail_1
+      # - slack/notify:
+      #     event: pass
+      #     template: success_tagged_deploy_1
