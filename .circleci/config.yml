@@ -218,6 +218,12 @@ jobs:
       - checkout
       - install_awscli
       - run:
+          name: Diags
+          command: |
+            pwd
+            ls -la . ..
+            printenv
+      - run:
           name: Ensure back-end infrastructure exists
           command: |
             aws cloudformation deploy \
