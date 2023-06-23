@@ -290,7 +290,7 @@ jobs:
           fingerprints: ["01:e3:11:e9:57:63:fc:1c:f9:99:49:83:bb:b0:dc:54"]
       # attach workspace
       - attach_workspace:
-        at: ~/
+          at: ~/
       - run:
           name: Configure server
           command: |
