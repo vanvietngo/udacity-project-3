@@ -2,8 +2,6 @@
 #  - Update/upgrade packages. 
 #  - Install nodejs, npm, and pm2.
 
-
-
 - name: "update apt packages."
   become: yes
   apt:
@@ -35,8 +33,3 @@
     production: yes
     state: present
 
-- name: "show env be"
-  become: true
-  shell: |
-    # Install Node.js LTS version as our base Node.js version
-    printenv
