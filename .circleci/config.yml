@@ -321,7 +321,7 @@ jobs:
             # Your code here
             cd backend
             touch .env
-            echo NODE_ENV=production >> ".env"
+            echo NODE_ENV=local >> ".env"
             echo VERSION=1 >> ".env"
             echo TYPEORM_CONNECTION=postgres >> ".env"
             echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> ".env"
