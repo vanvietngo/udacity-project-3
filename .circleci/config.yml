@@ -330,15 +330,15 @@ jobs:
 
             # Use these values for the local PG database from the Docker Compose file
 
-            echo TYPEORM_HOST=$TYPEORM_HOST >> ".env"
-            echo TYPEORM_PORT=5432 >> ".env"
-            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> ".env"
-            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> ".env"
-            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> ".env"
+            # echo TYPEORM_HOST=$TYPEORM_HOST >> ".env"
+            # echo TYPEORM_PORT=5432 >> ".env"
+            # echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> ".env"
+            # echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> ".env"
+            # echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> ".env"
 
-            echo $TYPEORM_USERNAME 
-            echo $TYPEORM_HOST
-            echo $TYPEORM_DATABASE
+            # echo $TYPEORM_USERNAME 
+            # echo $TYPEORM_HOST
+            # echo $TYPEORM_DATABASE
 
 
             npm install
