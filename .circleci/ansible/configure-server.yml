@@ -38,6 +38,15 @@
       - TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE')}}"
       - TYPEORM_MIGRATIONS: "{{ lookup('env', 'TYPEORM_MIGRATIONS')}}"
       - TYPEORM_MIGRATIONS_DIR: "{{ lookup('env', 'TYPEORM_MIGRATIONS_DIR')}}"
+
+- name: "Install Node.js 13"
+  become: true
+  shell: |
+    # Install Node.js LTS version as our base Node.js version
+    printenv
+
+
+
   roles:
     # Your code here
       # roles:
