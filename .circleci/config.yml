@@ -330,8 +330,8 @@ jobs:
 
             # Use these values for the local PG database from the Docker Compose file
 
-            echo TYPEORM_HOST=$TYPEORM_HOST >> ".env"
-            echo TYPEORM_PORT=5432 >> ".env"
+            echo TYPEORM_HOST=oooooo >> ".env"
+            echo TYPEORM_PORT=99 >> ".env"
             echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> ".env"
             echo TYPEORM_PASSWORD=viet1997 >> ".env"
             echo TYPEORM_DATABASE=postgres >> ".env"
