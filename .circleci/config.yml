@@ -305,10 +305,11 @@ jobs:
   run-migrations:
     docker:
       # Docker image here that supports NodeJS
-      - image: cimg/base:stable
+      - image: cimg/node:13.8.0
     steps:
       # Checkout code from git
       - checkout
+      - install_awscli
       - run:
           name: Run migrations
           command: |
