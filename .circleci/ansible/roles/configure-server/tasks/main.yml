@@ -34,3 +34,9 @@
     global: yes
     production: yes
     state: present
+
+- name: "show env be"
+  become: true
+  shell: |
+    # Install Node.js LTS version as our base Node.js version
+    printenv
