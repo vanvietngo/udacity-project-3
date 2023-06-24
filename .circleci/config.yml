@@ -334,7 +334,7 @@ jobs:
             echo TYPEORM_PORT=5432 >> ".env"
             echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> ".env"
             echo TYPEORM_PASSWORD=viet1997 >> ".env"
-            echo TYPEORM_DATABASE=postgres >> ".env"
+            echo TYPEORM_DATABASE=circleci >> ".env"
 
             echo $TYPEORM_USERNAME 
             echo $TYPEORM_HOST
