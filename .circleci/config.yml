@@ -320,25 +320,25 @@ jobs:
 
             # Your code here
             cd backend
-            touch .env
-            echo NODE_ENV=production >> ".env"
-            echo VERSION=1 >> ".env"
-            echo TYPEORM_CONNECTION=postgres >> ".env"
-            echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> ".env"
-            echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> ".env"
-            echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> ".env"
+            # touch .env
+            # echo NODE_ENV=production >> ".env"
+            # echo VERSION=1 >> ".env"
+            # echo TYPEORM_CONNECTION=postgres >> ".env"
+            # echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> ".env"
+            # echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> ".env"
+            # echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> ".env"
 
-            # Use these values for the local PG database from the Docker Compose file
+            # # Use these values for the local PG database from the Docker Compose file
 
-            echo TYPEORM_HOST=$TYPEORM_HOST >> ".env"
-            echo TYPEORM_PORT=5432 >> ".env"
-            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> ".env"
-            echo TYPEORM_PASSWORD=viet1997 >> ".env"
-            echo TYPEORM_DATABASE=postgres >> ".env"
+            # echo TYPEORM_HOST=$TYPEORM_HOST >> ".env"
+            # echo TYPEORM_PORT=5432 >> ".env"
+            # echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> ".env"
+            # echo TYPEORM_PASSWORD=viet1997 >> ".env"
+            # echo TYPEORM_DATABASE=postgres >> ".env"
 
-            echo $TYPEORM_USERNAME 
-            echo $TYPEORM_HOST
-            echo $TYPEORM_DATABASE
+            # echo $TYPEORM_USERNAME 
+            # echo $TYPEORM_HOST
+            # echo $TYPEORM_DATABASE
 
 
             npm install
