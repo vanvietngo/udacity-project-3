@@ -66,6 +66,7 @@ commands:
               npm run migrations:revert
               # exit 1
             fi
+ 
   revert-migrations-force:
       description: Revert the last migration if successfully run in the current workflow.
       parameters:
@@ -86,6 +87,18 @@ commands:
                 npm run migrations:revert
                 # exit 1
               fi
+
+  install_nodejs:
+    description: Install Node.js 13
+    steps:
+      - run:
+          name: Install Node.js 13
+          command: |
+            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+            sudo apt install -y nodejs
+            sudo npm install --global n
+            sudo n 13.8.0
+
 jobs:
   build-slack:
     machine: true
@@ -376,27 +389,46 @@ jobs:
       - destroy-environment
       - revert-migrations
 
-#   deploy-frontend:
-#     docker:
-#       # Docker image here that supports AWS CLI
-#     steps:
-#       # Checkout code from git
-#       - run:
-#           name: Install dependencies
-#           command: |
-#             # your code here
-#       - run:
-#           name: Get backend url
-#           command: |
-#             # your code here
-#             export API_URL="http://${BACKEND_IP}:3030"
-#             echo "${API_URL}"
-#       - run:
-#           name: Deploy frontend objects
-#           command: |
-#             # your code here
-#       # Here's where you will add some code to rollback on failure
+  deploy-frontend:
+    docker:
+      # Docker image here that supports AWS CLI
+      - image: cimg/base:stable
+    steps:
+      # Checkout code from git
+      - checkout
+      - install_awscli
+      - install_nodejs
+      - run:
+          name: Install dependencies
+          command: |
+            # your code here
+            cd frontend
+            npm install
 
+      - run:
+          name: Get backend url
+          command: |
+            # your code here
+              BACKEND_PUBLIC=$(aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:5}" \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --output text)
+
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
+      - run:
+          name: Deploy frontend objects
+          command: |
+            # your code here
+            cd frontend
+            npm install
+            npm run build
+            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:5}".tar.gz dist
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:5} --recursive
+
+      # Here's where you will add some code to rollback on failure
+      - destroy-environment
+      - revert-migrations
 #   deploy-backend:
 #     docker:
 #       # Docker image here that supports Ansible
@@ -474,26 +506,26 @@ jobs:
 workflows:
   default:
     jobs:
-      # - build-frontend
-      # - build-backend
-      # - test-frontend:
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
-      # - scan-backend:
-      #     requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [build-frontend]
+      - build-frontend
+      - build-backend
+      - test-frontend:
+          requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
+      - scan-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
 
-      # - deploy-infrastructure:
-      #     # requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-      #     filters:
-      #       branches:
-      #         only: [main]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
-      - run-migrations
-          # requires: [configure-infrastructure]
+      - deploy-infrastructure:
+          # requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          filters:
+            branches:
+              only: [main]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
+      - run-migrations:
+          requires: [configure-infrastructure]
       # - deploy-frontend:
       #     requires: [run-migrations]
       # - deploy-backend:
