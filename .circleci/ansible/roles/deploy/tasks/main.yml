@@ -24,7 +24,7 @@
 
 - name: move env to /etc/profile.d/
   become: true 
-  coppy:
+  copy:
     src: env.sh
     dest: /etc/profile.d
 
