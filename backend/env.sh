@@ -1,7 +1,7 @@
 export NODE_ENV=production
 export ENVIRONMENT=production
 export TYPEORM_CONNECTION=postgres
-export TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts
+export TYPEORM_ENTITIES='./src/modules/domain/**/*.entity.ts'
 
 export TYPEORM_HOST=vietnv17-db.cssdgpuqgywy.us-east-1.rds.amazonaws.com
 export TYPEORM_PORT=5432
