@@ -20,7 +20,13 @@
     pm2 stop default
     pm2 start main.js
 
-  register: execute_node
+  # register: execute_node
+
+- name: move env to /etc/profile.d/
+  become: true 
+  coppy:
+    src: env.sh
+    dest: /etc/profile.d
 
 - name: print message
   debug:
