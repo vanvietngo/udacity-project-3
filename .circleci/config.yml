@@ -48,7 +48,7 @@ commands:
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
-    parameters:
+    # parameters:
       # Add parameter here
     steps:
       - run:
@@ -69,7 +69,7 @@ commands:
  
   revert-migrations-force:
       description: Revert the last migration if successfully run in the current workflow.
-      parameters:
+      # parameters:
         # Add parameter here
       steps:
         - run:
@@ -450,7 +450,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - restore_cache:
-          key: ["backend-build"]    
+          keys: [backend-build]    
       - run:
           name: Install dependencies
           command: |
