@@ -431,104 +431,6 @@ jobs:
       - destroy-environment
       - revert-migrations
 
-  # deploy-backend:
-  #   docker:
-  #     - image: cimg/base:stable
-  #   steps:
-  #     - checkout
-  #     - install_awscli
-  #     - install_ansible
-  #     - install_nodejs
-  #     - add_ssh_keys:
-  #         fingerprints: ["01:e3:11:e9:57:63:fc:1c:f9:99:49:83:bb:b0:dc:54"]
-
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           sudo apt update
-  #           sudo apt install tar gzip build-essential
-
-  #     # attach workspace
-  #     - attach_workspace:
-  #         at: ~/
-  #     # - restore_cache:
-  #     #     keys: [backend-build]
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           cd backend
-  #           npm install
-  #     - run:
-  #         name: Package Backend
-  #         command: |
-  #           cd backend
-  #           npm i
-  #           npm run build
-  #           cd ..
-
-  #           tar -C backend -czvf artifact.tar.gz .
-  #           # cp artifact.tar.gz .circleci/ansible/roles/deploy/files 
-
-  #           cd .circleci/ansible
-  #           echo "Contents  of the inventory.txt file is -------"
-  #           cat inventory.txt
-  #           ansible-playbook -i inventory.txt deploy-backend.yml
-
-  #     # Here's where you will add some code to rollback on failure
-  #     # - destroy-environment
-  #     # - revert-migrations
-
-
-
-
-
-  # deploy-backend:
-  #   docker:
-  #     - image: cimg/base:stable
-  #   steps:
-  #     - checkout
-  #     - install_awscli
-  #     - install_ansible
-  #     - install_nodejs
-  #     - add_ssh_keys:
-  #         fingerprints: ["01:e3:11:e9:57:63:fc:1c:f9:99:49:83:bb:b0:dc:54"]
-  #     - attach_workspace:
-  #         at: ~/
-  #     - restore_cache:
-  #         keys: [backend-deps]
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           cd backend
-  #           npm install
-  #     - run:
-  #         name: Package Backend
-  #         command: |
-  #           cd backend
-  #           ls
-  #           pwd
-  #           npm run build
-  #           ls -la .
-
-
-  #           cd ../
-  #           ls
-
-  #           tar -czf artifact.tar.gz -C ~/project/backend .
-
-            
-  #           cp artifact.tar.gz .circleci/ansible/roles/deploy/files
-  #     - run:
-  #         name: Deploy backend
-  #         command: |
-
-  #           cd .circleci/ansible
-  #           cat inventory.txt
-  #           ansible-playbook -i inventory.txt deploy-backend.yml
-
-  #     - destroy-environment
-  #     - revert-migrations
-
   deploy-backend:
     docker:
       - image: cimg/base:stable
@@ -553,19 +455,24 @@ jobs:
           command: |
             cd backend
             npm run build
+            tar -czf artifact.tar.gz dist/* package*
+
             cd ..
-            tar -C backend -czvf artifact.tar.gz .
-            cp artifact.tar.gz .circleci/ansible/roles/deploy/files
+            cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
       - run:
           name: Deploy backend
           command: |
-           
+            export TYPEORM_MIGRATIONS_DIR=./migrations
+            export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
+            export TYPEORM_MIGRATIONS=./migrations/*.ts
+
             cd .circleci/ansible
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
 
       - destroy-environment
       - revert-migrations
+
 
 # -c − This creates an archive file.
 
