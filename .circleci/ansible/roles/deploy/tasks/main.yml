@@ -16,16 +16,10 @@
 
 - name: "Executing Node app with PM2"
   shell: |
-    cd ~/backend-app/dist
-    cd ../
+    cd ~/backend-app
     npm install
-    npm run build
 
-    sudo npm install forever -g
-    sudo npm install ts-node -g
-
-    pm2 stop default
-    pm2 start main.js
+ 
 
   register: execute_node
 
