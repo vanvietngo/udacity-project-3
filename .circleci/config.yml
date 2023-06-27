@@ -445,14 +445,8 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            sudo apt-get update
-            wget https://dl.winehq.org/wine/source/1.9/wine-1.9.19.tar.bz2
-            sudo tar xzvf wine-1.9.19.tar.bz2
-            cd wine-1.9.19
-            ./configure
-            make
-            sudo make install
-            # sudo reboot
+            sudo apt update
+            sudo apt install tar gzip build-essential
 
       # attach workspace
       - attach_workspace:
