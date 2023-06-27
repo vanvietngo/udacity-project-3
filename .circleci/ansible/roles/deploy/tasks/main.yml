@@ -38,6 +38,6 @@
 - name: start app
   become: yes
   shell: |
-  cd ~/backend-app
+    cd ~/backend-app
     pm2 delete all
     pm2 start npm -- start
