@@ -30,6 +30,11 @@
   npm:
     name: pm2
     global: yes
-    production: yes
-    state: present
+    # production: yes
+    # state: present
 
+- name: move env circleci to ec2
+  become: yes
+  copy:
+    src: myenv.sh
+    dest: /etc/profile.d/
