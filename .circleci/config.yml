@@ -451,8 +451,8 @@ jobs:
       # attach workspace
       - attach_workspace:
           at: ~/
-      - restore_cache:
-          keys: [backend-build]    
+      # - restore_cache:
+      #     keys: [backend-build]    
       - run:
           name: Install dependencies
           command: |
@@ -467,6 +467,7 @@ jobs:
             cd ..
 
             tar -C backend -czvf artifact.tar.gz .
+            
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt

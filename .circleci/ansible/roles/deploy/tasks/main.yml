@@ -9,6 +9,11 @@
     src: ~/project/artifact.tar.gz
     dest: ~/backend-app
 
+- name: "Installing Node Dependencies"
+  shell: |
+    cd /etc
+    sudo chmod 777 profile.d
+
 - name: coppy env
   copy:
     src: env.sh
