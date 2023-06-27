@@ -31,15 +31,14 @@
     path: ~/backend-app
     state: directory
 
-- name: extract artifact
+- name: "extract artifact"
   become: yes
   unarchive:
     src: artifact.tar.gz
     dest: ~/backend-app
 
-- name: start app
+- name: "start app"
   become: yes
   shell: |
-
     pm2 delete all
     pm2 start npm -- start
