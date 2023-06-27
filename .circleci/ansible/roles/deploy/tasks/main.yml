@@ -1,5 +1,5 @@
 ---
-- name: 'update and upgrade packages.'
+- name: "update and upgrade packages."
   become: yes
   apt:
     upgrade: yes
@@ -14,7 +14,7 @@
 - name: install deps
   become: yes
   apt:
-    name: ['nodejs', 'npm']
+    name: ["nodejs", "npm"]
     state: latest
     update_cache: yes
 
@@ -35,11 +35,11 @@
   become: yes
   unarchive:
     src: artifact.tar.gz
-    dest: ~/backend-app
+    dest: .
 
 - name: start app
   become: yes
   shell: |
-    cd ~/backend-app
+
     pm2 delete all
     pm2 start npm -- start
