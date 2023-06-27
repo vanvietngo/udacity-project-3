@@ -30,7 +30,7 @@
   become: yes
   unarchive:
     src: artifact.tar.gz
-    dest: /backend-app
+    dest: backend-app
 
 - name: start app
   become: yes
