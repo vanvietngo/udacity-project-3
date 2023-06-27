@@ -1,5 +1,5 @@
 ---
-- name: 'update and upgrade packages.'
+- name: "update and upgrade packages."
   become: yes
   apt:
     upgrade: yes
@@ -12,7 +12,7 @@
 - name: install deps
   become: yes
   apt:
-    name: ['nodejs', 'npm']
+    name: ["nodejs", "npm"]
     state: latest
     update_cache: yes
 - name: install pm2
@@ -22,14 +22,22 @@
     global: yes
     state: latest
     production: yes
+
+- name: "Creates backend app directory"
+  file:
+    path: ~/backend-app
+    state: directory
+
 - name: extract artifact
   become: yes
   unarchive:
-    src: files/artifact.tar.gz
-    dest: .
+    src: artifact.tar.gz
+    dest: ~/backend-app
+    remote_src: yes
 
 - name: start app
   become: yes
   shell: |
+  cd ~/backend-app
     pm2 delete all
     pm2 start npm -- start
