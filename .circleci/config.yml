@@ -530,21 +530,13 @@ jobs:
   #     - revert-migrations
 
 deploy-backend:
-
   docker:
-
     # Docker image here that supports Ansible
-
     - image: python:3.7-alpine3.16
-
   steps:
-
     - checkout
-
     - add_ssh_keys:
-
-      fingerprints: ["b2:9f:fe:f4:2a:f1:6b:8f:45:ca:78:ea:de:cb:da:c1"]
-
+        fingerprints: ["01:e3:11:e9:57:63:fc:1c:f9:99:49:83:bb:b0:dc:54"]
     - attach_workspace:
 
       at: .circleci/ansible/
