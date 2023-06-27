@@ -21,6 +21,7 @@
 
 - name: "Installing Node Dependencies"
   shell: |
+    echo pritnenv
     cd ~/backend-app
     npm install
     pm2 stop default
