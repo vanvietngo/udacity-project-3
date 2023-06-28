@@ -13,7 +13,10 @@ Resources:
       BucketName: !Sub "udapeople-${ID}"
       # AccessControl: PublicRead
       PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
         BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: 404.html
