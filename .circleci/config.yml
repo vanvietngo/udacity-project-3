@@ -602,9 +602,6 @@ jobs:
       - run:
           name: Get old stack workflow id and remove stacks
           command: |
-            # echo <<pipeline.parameters.workflow_id>>
-            # export OldWorkflowID=<<pipeline.parameters.workflow_id>>
-
             export OldWorkflowID=$(curl --insecure https://kvdb.io/CALzhBUmmPzdTRrQYKNfEh/old_workflow_id)
             echo Old Workflow ID: $OldWorkflowID 
 
