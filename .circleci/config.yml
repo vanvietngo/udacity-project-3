@@ -638,7 +638,7 @@ jobs:
             cd .circleci/ansible
             cat inventory.txt
             ls
-            ansible-playbook -i inventory.txt node-exporter.yml
+            ansible-playbook -i inventory.txt configure-prometheus-node-exporter.yml
 
       - destroy-environment
       - revert-migrations
