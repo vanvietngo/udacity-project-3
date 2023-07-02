@@ -226,9 +226,8 @@ jobs:
             cd frontend
 
             npm install
-            npm audit --audit-level=critical
 
-            # npm audit fix --force --audit-level=critical
+            npm audit fix --force --audit-level=critical
 
             # npm audit fix
 
@@ -248,9 +247,8 @@ jobs:
             cd ./backend
 
             npm install
-            npm audit --audit-level=critical
 
-            # npm audit fix --force --audit-level=critical
+            npm audit fix --force --audit-level=critical
 
             # npm audit fix
 
