@@ -20,8 +20,8 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
-            aws cloudformation delete-stack --stack-name backend-stack-<< parameters.Workflow_ID >>
-            # aws s3 rm s3://udapeople-<<parameters.Workflow_ID>> --recursive
+            # aws cloudformation delete-stack --stack-name backend-stack-<< parameters.Workflow_ID >>
+            aws s3 rm s3://udapeople-<<parameters.Workflow_ID>> --recursive
             aws cloudformation delete-stack --stack-name frontend-stack-<< parameters.Workflow_ID >>
 
   install_awscli:
